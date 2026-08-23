@@ -21,7 +21,7 @@ function GridPage() {
   const [uploadError, setUploadError] = useState("");
 
   const user = getStoredUser();
-  const isAdmin = user?.role === "admin";
+  const isAdmin = Boolean(user?.isAdmin);
 
   const cells = Array.from({ length: ROWS * COLS }, (_, index) => index);
   const selectedRow = selectedCell !== null ? Math.floor(selectedCell / COLS) : null;

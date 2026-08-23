@@ -24,6 +24,7 @@ services:
     environment:
       PORT: 3001
       DATABASE_URL: postgres://${POSTGRES_USER:-westmarches}:${POSTGRES_PASSWORD:-westmarches}@postgres:5432/${POSTGRES_DB:-westmarches}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
     ports:
       - "3001:3001"
     volumes:

@@ -1,0 +1,155 @@
+.profile-page {
+  flex: 1;
+  padding: 24px;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-header h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.profile-header p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.profile-characters h2,
+.profile-users h2 {
+  font-size: 18px;
+  color: var(--text-h);
+  margin: 0 0 12px;
+}
+
+.character-list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.character-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-alt);
+}
+
+.character-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.character-info span {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.character-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.character-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.character-form--new {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-alt);
+}
+
+.character-form--new h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: var(--text-h);
+}
+
+.profile-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.profile-checkbox input {
+  width: auto;
+}
+
+.profile-page input,
+.profile-page select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.profile-page input:focus,
+.profile-page select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.profile-page button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  align-self: flex-start;
+}
+
+.profile-page button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.profile-page button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.character-secondary {
+  background: transparent !important;
+  color: var(--text-h) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.character-danger {
+  background: transparent !important;
+  color: var(--danger) !important;
+  border: 1px solid var(--danger) !important;
+}
+
+.profile-error {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.profile-empty {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text);
+}

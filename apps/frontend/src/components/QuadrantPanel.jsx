@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
+import { Link } from "react-router-dom";
 import {
   createQuadrantComment,
   deleteQuadrantComment,
+  getCharacters,
   getQuadrantComments,
   getQuadrantSummary,
   updateQuadrantComment,
@@ -23,8 +25,16 @@ function formatDate(value) {
   return new Date(value).toLocaleString("pt-BR");
 }
 
-function canModify(user, comment) {
-  return Boolean(user) && (user.role === "admin" || user.username === comment.created_by);
+function displayAuthor(comment) {
+  if (comment.is_anonymous) return "Anônimo";
+  if (comment.character_name) return comment.character_name;
+  return "Personagem removido";
+}
+
+function displaySubtitle(comment) {
+  if (comment.is_anonymous || !comment.character_name) return null;
+  const details = [comment.character_race, comment.character_class].filter(Boolean).join(" · ");
+  return details ? `${details} — Nível ${comment.character_level}` : `Nível ${comment.character_level}`;
 }
 
 function QuadrantPanel({ row, col, onClose }) {
@@ -36,12 +46,16 @@ function QuadrantPanel({ row, col, onClose }) {
 
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(true);
-  const [commentAuthor, setCommentAuthor] = useState("");
+  const [characters, setCharacters] = useState([]);
+
+  const [isAnonymous, setIsAnonymous] = useState(true);
+  const [characterId, setCharacterId] = useState("");
   const [commentContent, setCommentContent] = useState("");
   const [commentError, setCommentError] = useState("");
   const [postingComment, setPostingComment] = useState(false);
+
   const [editingCommentId, setEditingCommentId] = useState(null);
-  const [editingDraft, setEditingDraft] = useState({ author: "", content: "" });
+  const [editingDraft, setEditingDraft] = useState({ content: "", isAnonymous: true, characterId: "" });
 
   const user = getStoredUser();
   const token = localStorage.getItem("token");
@@ -57,11 +71,26 @@ function QuadrantPanel({ row, col, onClose }) {
       .catch(() => setSummary(""));
 
     setLoadingComments(true);
-    getQuadrantComments(row, col)
+    getQuadrantComments(row, col, token)
       .then(setComments)
       .catch(() => setComments([]))
       .finally(() => setLoadingComments(false));
   }, [row, col]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getCharacters(token)
+      .then((data) => {
+        setCharacters(data);
+        if (data.length > 0) {
+          setIsAnonymous(false);
+          setCharacterId(String(data[0].id));
+        }
+      })
+      .catch(() => setCharacters([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.username]);
 
   function startEditingSummary() {
     setSummaryDraft(summary);
@@ -87,6 +116,7 @@ function QuadrantPanel({ row, col, onClose }) {
   async function handleAddComment(event) {
     event.preventDefault();
     if (!commentContent.trim()) return;
+    if (!isAnonymous && !characterId) return;
 
     setPostingComment(true);
     setCommentError("");
@@ -95,11 +125,10 @@ function QuadrantPanel({ row, col, onClose }) {
       const comment = await createQuadrantComment(
         row,
         col,
-        { author: commentAuthor, content: commentContent },
+        { content: commentContent, isAnonymous, characterId },
         token,
       );
       setComments((prev) => [...prev, comment]);
-      setCommentAuthor("");
       setCommentContent("");
     } catch (err) {
       setCommentError(err.message);
@@ -110,7 +139,11 @@ function QuadrantPanel({ row, col, onClose }) {
 
   function startEditingComment(comment) {
     setEditingCommentId(comment.id);
-    setEditingDraft({ author: comment.author ?? "", content: comment.content });
+    setEditingDraft({
+      content: comment.content,
+      isAnonymous: comment.is_anonymous,
+      characterId: comment.character_id ? String(comment.character_id) : "",
+    });
     setCommentError("");
   }
 
@@ -194,14 +227,31 @@ function QuadrantPanel({ row, col, onClose }) {
             <li key={comment.id} className="quadrant-comment">
               {editingCommentId === comment.id ? (
                 <>
-                  <input
-                    type="text"
-                    placeholder="Personagem (ou deixe em branco para anônimo)"
-                    value={editingDraft.author}
-                    onChange={(event) =>
-                      setEditingDraft((prev) => ({ ...prev, author: event.target.value }))
-                    }
-                  />
+                  <label className="quadrant-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={editingDraft.isAnonymous}
+                      onChange={(event) =>
+                        setEditingDraft((prev) => ({ ...prev, isAnonymous: event.target.checked }))
+                      }
+                    />
+                    Publicar como anônimo
+                  </label>
+                  {!editingDraft.isAnonymous && (
+                    <select
+                      value={editingDraft.characterId}
+                      onChange={(event) =>
+                        setEditingDraft((prev) => ({ ...prev, characterId: event.target.value }))
+                      }
+                    >
+                      <option value="">Selecione um personagem</option>
+                      {characters.map((character) => (
+                        <option key={character.id} value={character.id}>
+                          {character.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                   <textarea
                     value={editingDraft.content}
                     onChange={(event) =>
@@ -225,11 +275,16 @@ function QuadrantPanel({ row, col, onClose }) {
               ) : (
                 <>
                   <div className="quadrant-comment-meta">
-                    <strong>{comment.author || "Anônimo"}</strong>
+                    <div>
+                      <strong>{displayAuthor(comment)}</strong>
+                      {displaySubtitle(comment) && (
+                        <span className="quadrant-comment-subtitle"> · {displaySubtitle(comment)}</span>
+                      )}
+                    </div>
                     <span>{formatDate(comment.created_at)}</span>
                   </div>
                   <p>{comment.content}</p>
-                  {canModify(user, comment) && (
+                  {comment.canModify && (
                     <div className="quadrant-actions">
                       <button
                         type="button"
@@ -257,12 +312,32 @@ function QuadrantPanel({ row, col, onClose }) {
 
         {user ? (
           <form className="quadrant-comment-form" onSubmit={handleAddComment}>
-            <input
-              type="text"
-              placeholder="Personagem (ou deixe em branco para anônimo)"
-              value={commentAuthor}
-              onChange={(event) => setCommentAuthor(event.target.value)}
-            />
+            <label className="quadrant-checkbox">
+              <input
+                type="checkbox"
+                checked={isAnonymous}
+                onChange={(event) => setIsAnonymous(event.target.checked)}
+              />
+              Publicar como anônimo
+            </label>
+
+            {!isAnonymous &&
+              (characters.length > 0 ? (
+                <select value={characterId} onChange={(event) => setCharacterId(event.target.value)}>
+                  <option value="">Selecione um personagem</option>
+                  {characters.map((character) => (
+                    <option key={character.id} value={character.id}>
+                      {character.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="quadrant-empty">
+                  Você ainda não tem personagens. Crie um no seu <Link to="/perfil">perfil</Link> ou
+                  marque como anônimo.
+                </p>
+              ))}
+
             <textarea
               placeholder="Ficou-se sabendo que..."
               value={commentContent}
@@ -270,7 +345,10 @@ function QuadrantPanel({ row, col, onClose }) {
               rows={3}
               required
             />
-            <button type="submit" disabled={postingComment}>
+            <button
+              type="submit"
+              disabled={postingComment || (!isAnonymous && !characterId)}
+            >
               {postingComment ? "Publicando..." : "Publicar rumor"}
             </button>
           </form>
