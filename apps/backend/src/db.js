@@ -91,4 +91,16 @@ export async function initDb() {
     CREATE INDEX IF NOT EXISTS quadrant_comments_grid_idx
     ON quadrant_comments (grid_row, grid_col);
   `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS map_pins (
+      id SERIAL PRIMARY KEY,
+      x DOUBLE PRECISION NOT NULL,
+      y DOUBLE PRECISION NOT NULL,
+      icon TEXT NOT NULL,
+      label TEXT,
+      created_by TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+  `);
 }

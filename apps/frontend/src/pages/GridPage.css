@@ -35,7 +35,14 @@
   max-width: 1650px;
 }
 
+.grid-pin-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--danger);
+}
+
 .grid-board {
+  position: relative;
   flex: 0 0 auto;
   display: grid;
   width: min(1200px, 100%);
@@ -47,6 +54,95 @@
   background-color: var(--bg-alt);
   background-size: cover;
   background-position: center;
+}
+
+.pin-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.map-pin-wrapper {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+}
+
+.map-pin {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+  padding: 2px;
+  border: none;
+  background: transparent;
+  cursor: grab;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+}
+
+.map-pin:active {
+  cursor: grabbing;
+}
+
+.map-pin-popover {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 180px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-alt);
+  --bg: var(--bg-alt-2);
+  --text: var(--ink);
+  --text-h: var(--ink-strong);
+  --danger: var(--danger-ink);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.map-pin-popover input[type="text"] {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.map-pin-popover p {
+  margin: 0;
+  color: var(--text-h);
+}
+
+.map-pin-popover-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.map-pin-popover button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.map-pin-popover button:hover {
+  background: var(--accent-hover);
+}
+
+.map-pin-popover-danger {
+  background: transparent !important;
+  color: var(--danger) !important;
+  border: 1px solid var(--danger) !important;
 }
 
 .grid-cell {

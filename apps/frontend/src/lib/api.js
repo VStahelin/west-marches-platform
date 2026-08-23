@@ -238,3 +238,59 @@ export async function deleteQuadrantComment(row, col, id, token) {
     throw new Error(data.message || "Não foi possível remover o rumor.");
   }
 }
+
+export async function getMapPins(token) {
+  const response = await fetch(`${API_URL}/api/pins`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+
+  if (!response.ok) {
+    throw new Error("Não foi possível carregar os pins.");
+  }
+
+  return response.json();
+}
+
+export async function createMapPin(pin, token) {
+  const response = await fetch(`${API_URL}/api/pins`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(pin),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível criar o pin.");
+  }
+
+  return data;
+}
+
+export async function updateMapPin(id, pin, token) {
+  const response = await fetch(`${API_URL}/api/pins/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(pin),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível editar o pin.");
+  }
+
+  return data;
+}
+
+export async function deleteMapPin(id, token) {
+  const response = await fetch(`${API_URL}/api/pins/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || "Não foi possível remover o pin.");
+  }
+}
