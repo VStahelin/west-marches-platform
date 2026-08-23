@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import QuadrantPanel from "../components/QuadrantPanel.jsx";
 import { API_URL, getMapBackground, uploadMapBackground } from "../lib/api.js";
 import "./GridPage.css";
 
@@ -23,6 +24,8 @@ function GridPage() {
   const isAdmin = user?.role === "admin";
 
   const cells = Array.from({ length: ROWS * COLS }, (_, index) => index);
+  const selectedRow = selectedCell !== null ? Math.floor(selectedCell / COLS) : null;
+  const selectedCol = selectedCell !== null ? selectedCell % COLS : null;
 
   useEffect(() => {
     getMapBackground()
@@ -71,30 +74,30 @@ function GridPage() {
         )}
       </header>
 
-      <div
-        className="grid-board"
-        style={{
-          gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-          gridTemplateRows: `repeat(${ROWS}, 1fr)`,
-          backgroundImage: backgroundUrl ? `url(${API_URL}${backgroundUrl})` : undefined,
-        }}
-      >
-        {cells.map((index) => (
-          <button
-            key={index}
-            type="button"
-            className={`grid-cell${selectedCell === index ? " grid-cell--selected" : ""}`}
-            onClick={() => setSelectedCell(index)}
-            aria-label={`Quadrante ${Math.floor(index / COLS)}, ${index % COLS}`}
-          />
-        ))}
-      </div>
-
-      {selectedCell !== null && (
-        <div className="grid-info">
-          Quadrante selecionado: {Math.floor(selectedCell / COLS)}, {selectedCell % COLS}
+      <div className="grid-layout">
+        <div
+          className="grid-board"
+          style={{
+            gridTemplateColumns: `repeat(${COLS}, 1fr)`,
+            gridTemplateRows: `repeat(${ROWS}, 1fr)`,
+            backgroundImage: backgroundUrl ? `url(${API_URL}${backgroundUrl})` : undefined,
+          }}
+        >
+          {cells.map((index) => (
+            <button
+              key={index}
+              type="button"
+              className={`grid-cell${selectedCell === index ? " grid-cell--selected" : ""}`}
+              onClick={() => setSelectedCell((prev) => (prev === index ? null : index))}
+              aria-label={`Quadrante ${Math.floor(index / COLS)}, ${index % COLS}`}
+            />
+          ))}
         </div>
-      )}
+
+        {selectedCell !== null && (
+          <QuadrantPanel row={selectedRow} col={selectedCol} onClose={() => setSelectedCell(null)} />
+        )}
+      </div>
     </div>
   );
 }

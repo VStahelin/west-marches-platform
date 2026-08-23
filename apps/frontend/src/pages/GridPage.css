@@ -49,7 +49,17 @@
   color: var(--danger);
 }
 
+.grid-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 1650px;
+}
+
 .grid-board {
+  flex: 0 0 auto;
   display: grid;
   width: min(1200px, 100%);
   aspect-ratio: 16 / 10;
@@ -71,9 +81,4 @@
 
 .grid-cell--selected {
   background: var(--accent);
-}
-
-.grid-info {
-  font-size: 14px;
-  color: var(--text-h);
 }

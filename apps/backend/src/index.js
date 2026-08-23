@@ -1,9 +1,10 @@
 import cors from "cors";
 import express from "express";
-import { pool } from "./db.js";
+import { initDb, pool } from "./db.js";
 import { uploadsDir } from "./uploads-dir.js";
 import authRouter from "./routes/auth.js";
 import mapRouter from "./routes/map.js";
+import quadrantsRouter from "./routes/quadrants.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -27,7 +28,13 @@ app.get("/api/health/db", async (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/map", mapRouter);
+app.use("/api/quadrants", quadrantsRouter);
 
-app.listen(PORT, () => {
-  console.log(`Backend rodando em http://localhost:${PORT}`);
-});
+async function start() {
+  await initDb();
+  app.listen(PORT, () => {
+    console.log(`Backend rodando em http://localhost:${PORT}`);
+  });
+}
+
+start();

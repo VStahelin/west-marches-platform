@@ -1,0 +1,158 @@
+.quadrant-panel {
+  flex: 1 1 380px;
+  min-width: 320px;
+  max-width: 480px;
+  max-height: min(720px, 80vh);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-alt);
+  text-align: left;
+}
+
+.quadrant-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.quadrant-panel-header h2 {
+  font-size: 18px;
+}
+
+.quadrant-panel-close {
+  border: none;
+  background: transparent;
+  color: var(--text-h);
+  font-size: 22px;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.quadrant-summary-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.quadrant-summary-content :first-child {
+  margin-top: 0;
+}
+
+.quadrant-summary-content :last-child {
+  margin-bottom: 0;
+}
+
+.quadrant-comments h3 {
+  font-size: 15px;
+  color: var(--text-h);
+  margin: 0 0 8px;
+}
+
+.quadrant-comment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quadrant-comment {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quadrant-comment-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.quadrant-comment p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.quadrant-comment-form {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quadrant-panel input[type="text"],
+.quadrant-panel textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  resize: vertical;
+}
+
+.quadrant-panel input:focus,
+.quadrant-panel textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.quadrant-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.quadrant-panel button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.quadrant-panel button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.quadrant-panel button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quadrant-secondary {
+  background: transparent !important;
+  color: var(--text-h) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.quadrant-danger {
+  background: transparent !important;
+  color: var(--danger) !important;
+  border: 1px solid var(--danger) !important;
+}
+
+.quadrant-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.quadrant-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text);
+}
