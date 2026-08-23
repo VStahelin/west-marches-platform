@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>West Marches Wiki Redesign</title>
+<style>
+:root{
+  --bg:#121b18;
+  --sidebar:#1c2a24;
+  --paper:#f5f1e6;
+  --text:#1b1b1b;
+  --gold:#c49a4a;
+  --gold-hover:#d7ae62;
+  --border:#e2d7bd;
+  --success:#4d8b58;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family: Inter, system-ui, sans-serif;
+  background:var(--bg);
+  height:100vh;
+}
+
+.layout{
+  display:flex;
+  height:100vh;
+}
+
+.sidebar{
+  width:280px;
+  background:var(--sidebar);
+  color:white;
+  padding:24px;
+  border-right:1px solid rgba(255,255,255,.08);
+}
+
+.logo{
+  font-size:24px;
+  font-weight:700;
+  margin-bottom:24px;
+}
+
+.search{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  margin-bottom:24px;
+  background:#26362f;
+  color:white;
+}
+
+.section{
+  margin-top:24px;
+}
+
+.section h4{
+  color:#9fb3aa;
+  font-size:12px;
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+
+.nav-item{
+  display:block;
+  padding:10px 12px;
+  color:white;
+  text-decoration:none;
+  border-radius:8px;
+  margin-bottom:4px;
+}
+
+.nav-item:hover{
+  background:#26362f;
+}
+
+.active{
+  background:var(--gold);
+  color:#111;
+  font-weight:600;
+}
+
+.content{
+  flex:1;
+  overflow:auto;
+  padding:40px;
+}
+
+.paper{
+  max-width:1000px;
+  margin:auto;
+  background:var(--paper);
+  border-radius:20px;
+  padding:48px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.breadcrumb{
+  color:#7b7464;
+  margin-bottom:8px;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:start;
+  margin-bottom:32px;
+}
+
+h1{
+  font-size:42px;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  color:#6f6858;
+}
+
+.btn{
+  background:var(--gold);
+  border:none;
+  padding:12px 18px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btn:hover{
+  background:var(--gold-hover);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+}
+
+.card h3{
+  margin-bottom:12px;
+}
+
+.status{
+  display:inline-block;
+  background:#e6f3e9;
+  color:var(--success);
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:16px;
+}
+
+.card p{
+  color:#555;
+  line-height:1.6;
+}
+
+.link{
+  display:inline-block;
+  margin-top:16px;
+  color:var(--gold);
+  text-decoration:none;
+  font-weight:600;
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">⚔️ West Marches</div>
+
+    <input class="search" placeholder="Buscar..." />
+
+    <div class="section">
+      <h4>PERSONAGENS</h4>
+      <a class="nav-item">NPCs Conhecidos</a>
+      <a class="nav-item">Facções</a>
+    </div>
+
+    <div class="section">
+      <h4>QUESTS</h4>
+      <a class="nav-item active">Quests Abertas</a>
+      <a class="nav-item">Concluídas</a>
+    </div>
+
+    <div class="section">
+      <h4>REGRAS</h4>
+      <a class="nav-item">Progressão e XP</a>
+      <a class="nav-item">Visão Geral</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="paper">
+      <div class="breadcrumb">Missões / Quests</div>
+
+      <div class="header">
+        <div>
+          <h1>Quests Abertas</h1>
+          <div class="subtitle">Última atualização há 2 dias</div>
+        </div>
+
+        <button class="btn">Editar Página</button>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <h3>🏆 O Tesouro Perdido</h3>
+          <span class="status">Aberta</span>
+          <p>Encontrar o artefato desaparecido nas ruínas ao norte da floresta.</p>
+          <a href="#" class="link">Ver detalhes →</a>
+        </article>
+
+        <article class="card">
+          <h3>🐸 Rumores do Pântano</h3>
+          <span class="status">Aberta</span>
+          <p>Investigar desaparecimentos próximos ao pântano e identificar a ameaça.</p>
+          <a href="#" class="link">Ver detalhes →</a>
+        </article>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

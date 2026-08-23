@@ -8,6 +8,7 @@ import mapRouter from "./routes/map.js";
 import pinsRouter from "./routes/pins.js";
 import quadrantsRouter from "./routes/quadrants.js";
 import usersRouter from "./routes/users.js";
+import wikiRouter from "./routes/wiki.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -35,6 +36,7 @@ app.use("/api/quadrants", quadrantsRouter);
 app.use("/api/characters", charactersRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/pins", pinsRouter);
+app.use("/api/wiki", wikiRouter);
 
 async function start() {
   await initDb();

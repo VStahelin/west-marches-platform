@@ -6,3 +6,4 @@ dist/
 .DS_Store
 apps/backend/uploads/
 apps/backend/quadrants/
+apps/backend/wiki/

@@ -7,3 +7,6 @@
 4. paginacao/scroll de rumores quando o quadrante tiver muitos comentarios
 5. death points e marcadores de loot no grid
 6. quadro de missoes globais
+7. wiki
+   - [x] backend le/estrutura a wiki a partir de um folder (apps/backend/wiki/), arquivos .md, exposto via api (crud de paginas e pastas, so admin edita)
+   - [x] frontend em /wiki com navegacao em arvore + editor markdown (mesmo estilo do QuadrantPanel)

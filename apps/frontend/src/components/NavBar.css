@@ -1,55 +1,126 @@
 .navbar {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 12px 24px;
+  gap: 20px;
+  padding: 10px 24px;
   border-bottom: 2px solid var(--border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
 .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.navbar-brand-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.navbar-brand-text {
+  font-size: 15px;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-h);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .navbar-links {
-  display: flex;
-  gap: 16px;
   flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
 }
 
 .navbar-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid transparent;
+  border-radius: 999px;
   color: var(--text);
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
-  padding: 4px 0;
-  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.navbar-link-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.navbar-link:hover {
+  background: rgba(201, 146, 46, 0.14);
+  color: var(--text-h);
 }
 
 .navbar-link.active {
-  color: var(--text-h);
-  border-bottom-color: var(--accent);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }
 
 .navbar-user {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
-  color: var(--text);
+  flex-shrink: 0;
 }
 
-.navbar-user button {
+.navbar-user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.navbar-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+}
+
+.navbar-logout {
   padding: 6px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: transparent;
-  color: var(--text-h);
+  color: var(--text);
   font-size: 13px;
   font-weight: 600;
 }
 
-.navbar-user button:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+.navbar-logout:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+@media (max-width: 760px) {
+  .navbar {
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .navbar-link {
+    padding: 8px;
+  }
+
+  .navbar-link-text,
+  .navbar-username {
+    display: none;
+  }
 }

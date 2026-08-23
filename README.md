@@ -13,7 +13,7 @@ West Marches é um estilo de campanha de RPG sem um grupo fixo de jogadores nem 
 ```
 .
 ├── apps/
-│   ├── backend/       # API em Express (JS), conecta no Postgres, guarda uploads e resumos em disco
+│   ├── backend/       # API em Express (JS), conecta no Postgres, guarda uploads, resumos e a wiki em disco
 │   └── frontend/      # SPA em React + Vite (JS)
 ├── docs/              # Documentação de design/regras/roadmap
 ├── docker-compose.yml # Sobe backend + Postgres em containers
@@ -60,7 +60,7 @@ docker compose up -d --build
 
 Isso sobe:
 - `postgres` — Postgres 16 na porta `5432`, com volume persistente (guarda os rumores)
-- `backend` — API Express na porta `3001`, já conectada ao Postgres, com volumes persistentes para a imagem do mapa (`uploads/`) e os resumos em markdown dos quadrantes (`quadrants/`)
+- `backend` — API Express na porta `3001`, já conectada ao Postgres, com volumes persistentes para a imagem do mapa (`uploads/`), os resumos em markdown dos quadrantes (`quadrants/`) e as páginas da wiki (`wiki/`)
 
 Outros comandos úteis:
 
@@ -102,6 +102,13 @@ A autenticação ainda é provisória (sem tabela de usuários): qualquer usuár
 | POST   | `/api/quadrants/:row/:col/comments`         | usuário logado | Cria um rumor (`author` opcional; vazio = anônimo)        |
 | PUT    | `/api/quadrants/:row/:col/comments/:id`     | dono ou admin  | Edita um rumor                                           |
 | DELETE | `/api/quadrants/:row/:col/comments/:id`     | dono ou admin  | Remove um rumor                                          |
+| GET    | `/api/wiki/tree`                            | -              | Árvore de pastas/páginas da wiki                          |
+| GET    | `/api/wiki/pages/*`                         | -              | Lê o conteúdo (markdown) de uma página da wiki            |
+| POST   | `/api/wiki/pages`                           | admin          | Cria uma página nova (`parentPath`, `name`, `content`)    |
+| PUT    | `/api/wiki/pages/*`                         | admin          | Atualiza o conteúdo de uma página existente                |
+| DELETE | `/api/wiki/pages/*`                         | admin          | Remove uma página                                          |
+| POST   | `/api/wiki/folders`                         | admin          | Cria uma pasta nova (`parentPath`, `name`)                 |
+| DELETE | `/api/wiki/folders/*`                       | admin          | Remove uma pasta e todo o conteúdo dentro dela              |
 
 ## Funcionalidades planejadas
 
@@ -116,9 +123,10 @@ A autenticação ainda é provisória (sem tabela de usuários): qualquer usuár
 - Múltiplas campanhas podem se desenrolar simultaneamente sobre o mesmo mapa
 
 ### Wiki
-- Regras do jogo
-- Personagens e NPCs conhecidos
-- Quests em aberto
+- Estrutura em árvore de pastas e páginas, cada página é um arquivo `.md` guardado em `apps/backend/wiki/`
+- Navegação lateral com a árvore completa; conteúdo renderizado a partir do markdown
+- Só admin cria/edita/remove páginas e pastas pela interface (`/wiki`) ou via API; leitura é aberta a todos
+- Categorias sugeridas: regras do jogo, personagens/NPCs conhecidos, quests em aberto
 
 ### Plataforma / Usuários
 - Login por usuário
@@ -153,6 +161,7 @@ Itens em validação/protótipo no momento (veja [`docs/road-map.md`](docs/road-
 - [ ] Paginação/scroll de rumores quando o quadrante tiver muitos comentários
 - [ ] Death points e marcadores de loot no grid
 - [ ] Quadro de missões globais
+- [x] Wiki (`/wiki`) com páginas em markdown organizadas em pastas, CRUD via API (admin)
 
 ## Contribuindo
 

@@ -239,6 +239,107 @@ export async function deleteQuadrantComment(row, col, id, token) {
   }
 }
 
+function encodeWikiPath(wikiPath) {
+  return String(wikiPath ?? "")
+    .split("/")
+    .filter(Boolean)
+    .map(encodeURIComponent)
+    .join("/");
+}
+
+export async function getWikiTree() {
+  const response = await fetch(`${API_URL}/api/wiki/tree`);
+
+  if (!response.ok) {
+    throw new Error("Não foi possível carregar a wiki.");
+  }
+
+  return response.json();
+}
+
+export async function getWikiPage(wikiPath) {
+  const response = await fetch(`${API_URL}/api/wiki/pages/${encodeWikiPath(wikiPath)}`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível carregar a página.");
+  }
+
+  return data;
+}
+
+export async function createWikiPage({ parentPath, name, content }, token) {
+  const response = await fetch(`${API_URL}/api/wiki/pages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ parentPath, name, content }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível criar a página.");
+  }
+
+  return data;
+}
+
+export async function updateWikiPage(wikiPath, content, token) {
+  const response = await fetch(`${API_URL}/api/wiki/pages/${encodeWikiPath(wikiPath)}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ content }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível salvar a página.");
+  }
+
+  return data;
+}
+
+export async function deleteWikiPage(wikiPath, token) {
+  const response = await fetch(`${API_URL}/api/wiki/pages/${encodeWikiPath(wikiPath)}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || "Não foi possível remover a página.");
+  }
+}
+
+export async function createWikiFolder({ parentPath, name }, token) {
+  const response = await fetch(`${API_URL}/api/wiki/folders`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ parentPath, name }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível criar a pasta.");
+  }
+
+  return data;
+}
+
+export async function deleteWikiFolder(wikiPath, token) {
+  const response = await fetch(`${API_URL}/api/wiki/folders/${encodeWikiPath(wikiPath)}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || "Não foi possível remover a pasta.");
+  }
+}
+
 export async function getMapPins(token) {
   const response = await fetch(`${API_URL}/api/pins`, {
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
