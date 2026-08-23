@@ -1,0 +1,13 @@
+{
+  "name": "west-marches-platform",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev": "pnpm --parallel --filter frontend --filter backend dev"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

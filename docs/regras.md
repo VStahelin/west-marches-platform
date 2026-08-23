@@ -1,0 +1,6 @@
+1. Jogadores formam equipes e decidem com qual conteudo (rumores, npcs, etc) querem interagir
+2. Multiplos mestrantes podem criar conteudo neste mundo compartilhado (incluindo dungeons, faccoes, encounters aleatorios no caminho...) e colocar npcs ou anuncios que fazem "propaganda" deste mesmo conteudo
+3. Progressao por XP, personagens eventualmente terao diferentes niveis dependendo de quanto conteudo eles exploram
+4. Para ajudar na progressao e incentivar a exploracao, tesouro tambem conta como experiencia (1gp obtido e transportado = 1xp; itens, joias e loot em geral tambem conta)
+5. Contar historias e dar informacoes sobre o jogo no roleplay, talvez neste forum, pra incentivar outros grupos a talvez visitar o mesmo local e descobrir mais informacoes
+6. O mundo nao e justo, inimigos estao no mundo independente do nivel dos jogadores, justamente para incentivar equipes que recuam, procuram mais integrantes, espalham informacao para outros grupos mais fortes ou morrem e deixam seu loot e restos mortais para outros grupos encontrarem

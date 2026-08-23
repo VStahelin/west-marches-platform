@@ -1,0 +1,79 @@
+.grid-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+}
+
+.grid-header {
+  text-align: center;
+}
+
+.grid-header h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.grid-header p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.grid-admin-upload {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.grid-admin-upload label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+  padding: 6px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.grid-admin-upload input[type="file"] {
+  display: none;
+}
+
+.grid-upload-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.grid-board {
+  display: grid;
+  width: min(1200px, 100%);
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--border);
+  background-color: var(--bg-alt);
+  background-size: cover;
+  background-position: center;
+}
+
+.grid-cell {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  padding: 0;
+}
+
+.grid-cell:hover {
+  background: rgba(170, 59, 255, 0.25);
+}
+
+.grid-cell--selected {
+  background: var(--accent);
+}
+
+.grid-info {
+  font-size: 14px;
+  color: var(--text-h);
+}
