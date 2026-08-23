@@ -30,6 +30,11 @@ function NavBar() {
         <NavLink to="/perfil" className={({ isActive }) => (isActive ? "navbar-link active" : "navbar-link")}>
           Meu Perfil
         </NavLink>
+        {user?.isAdmin && (
+          <NavLink to="/config" className={({ isActive }) => (isActive ? "navbar-link active" : "navbar-link")}>
+            Configurações
+          </NavLink>
+        )}
       </div>
 
       {user && (

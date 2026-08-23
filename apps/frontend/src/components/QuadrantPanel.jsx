@@ -285,17 +285,13 @@ function QuadrantPanel({ row, col, onClose }) {
                   </div>
                   <p>{comment.content}</p>
                   {comment.canModify && (
-                    <div className="quadrant-actions">
-                      <button
-                        type="button"
-                        className="quadrant-secondary"
-                        onClick={() => startEditingComment(comment)}
-                      >
+                    <div className="quadrant-comment-actions">
+                      <button type="button" onClick={() => startEditingComment(comment)}>
                         Editar
                       </button>
                       <button
                         type="button"
-                        className="quadrant-danger"
+                        className="quadrant-comment-actions--danger"
                         onClick={() => handleDeleteComment(comment.id)}
                       >
                         Remover

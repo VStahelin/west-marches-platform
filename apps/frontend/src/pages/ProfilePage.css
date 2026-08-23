@@ -44,6 +44,11 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--bg-alt);
+  --bg: var(--bg-alt-2);
+  --text: var(--ink);
+  --text-h: var(--ink-strong);
+  --danger: var(--danger-ink);
+  color: var(--text);
 }
 
 .character-info {
@@ -72,9 +77,16 @@
 
 .character-form--new {
   padding: 16px;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
+  outline: 1px solid var(--border);
+  outline-offset: -5px;
   border-radius: 10px;
   background: var(--bg-alt);
+  --bg: var(--bg-alt-2);
+  --text: var(--ink);
+  --text-h: var(--ink-strong);
+  --danger: var(--danger-ink);
+  color: var(--text);
 }
 
 .character-form--new h3 {

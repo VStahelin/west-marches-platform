@@ -1,36 +1,33 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --bg-alt: #f4f3ec;
-  --border: #e5e4e7;
-  --accent: #aa3bff;
-  --accent-hover: #9526e8;
-  --danger: #d1414a;
+  /* "mesa" — fundo verde escuro por onde a navbar e os títulos das páginas circulam */
+  --bg: #2f3f36;
+  --text: #e7dbbd;
+  --text-h: #f6ecd6;
+  --danger: #ff8a70;
+
+  /* "pergaminho" — usado nos cards (login, painéis, formulários). Cada card
+     reatribui --bg/--text/--text-h/--danger para os tons de tinta abaixo, então
+     qualquer regra que já usa essas variáveis herda o valor certo dentro dele. */
+  --bg-alt: #ecdfc0;
+  --bg-alt-2: #e0cc9c;
+  --ink: #3a2c18;
+  --ink-strong: #241a0d;
+  --danger-ink: #9c2f22;
+
+  --border: #7c6239;
+  --accent: #c9922e;
+  --accent-hover: #dba846;
 
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
 
   font: 16px/145% var(--sans);
-  color-scheme: light dark;
+  color-scheme: dark;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --bg-alt: #1f2028;
-    --border: #2e303a;
-    --accent: #c084fc;
-    --accent-hover: #d3a5fd;
-    --danger: #f28b90;
-  }
 }
 
 * {
@@ -62,4 +59,8 @@ button {
 
 input {
   font: inherit;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--accent);
 }

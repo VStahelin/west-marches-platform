@@ -13,9 +13,16 @@
   flex-direction: column;
   gap: 8px;
   padding: 32px;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 12px;
+  outline: 1px solid var(--border);
+  outline-offset: -6px;
   background: var(--bg-alt);
+  --bg: var(--bg-alt-2);
+  --text: var(--ink);
+  --text-h: var(--ink-strong);
+  --danger: var(--danger-ink);
+  color: var(--text);
 }
 
 .login-card h1 {

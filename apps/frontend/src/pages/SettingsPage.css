@@ -1,0 +1,71 @@
+.settings-page {
+  flex: 1;
+  padding: 24px;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settings-header h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.settings-header p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.settings-section {
+  padding: 16px;
+  border: 2px solid var(--border);
+  outline: 1px solid var(--border);
+  outline-offset: -5px;
+  border-radius: 10px;
+  background: var(--bg-alt);
+  --bg: var(--bg-alt-2);
+  --text: var(--ink);
+  --text-h: var(--ink-strong);
+  --danger: var(--danger-ink);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.settings-section h2 {
+  font-size: 16px;
+}
+
+.settings-description {
+  margin: 0;
+  font-size: 13px;
+}
+
+.settings-upload {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--accent);
+}
+
+.settings-upload:hover {
+  background: var(--accent-hover);
+}
+
+.settings-page input[type="file"] {
+  display: none;
+}
+
+.settings-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--danger);
+}
