@@ -85,7 +85,9 @@ pnpm --filter frontend build
 
 ## Login para testes
 
-A autenticação ainda é provisória (sem tabela de usuários): qualquer usuário/senha funciona, mas o **username** `admin` sempre entra com a role `admin` — qualquer outro username vira `player`. Use `admin` / `admin` para testar as funcionalidades de admin (trocar a imagem de fundo do mapa).
+Autenticação real: usuários ficam na tabela `users` do Postgres, com senha hasheada (bcrypt) e um JWT emitido no login. Não existe autocadastro — contas são criadas por um admin em **Meu Perfil → Usuários** (ou via `POST /api/users`).
+
+Ao subir o backend pela primeira vez (banco vazio), um admin padrão é semeado automaticamente: **`admin` / `admin`**. Use-o para testar as funcionalidades de admin (trocar imagem do mapa, gerenciar usuários, editar a wiki) e para criar os demais usuários de teste.
 
 ## Endpoints do backend
 
@@ -93,7 +95,7 @@ A autenticação ainda é provisória (sem tabela de usuários): qualquer usuár
 | ------ | ------------------------------------------- | -------------- | ------------------------------------------------------ |
 | GET    | `/api/health`                               | -              | Healthcheck simples do servidor                        |
 | GET    | `/api/health/db`                            | -              | Healthcheck da conexão com o Postgres                  |
-| POST   | `/api/auth/login`                           | -              | Login (provisório, sem persistência ainda)              |
+| POST   | `/api/auth/login`                           | -              | Login (usuário/senha, retorna JWT)                       |
 | GET    | `/api/map/background`                       | -              | URL da imagem de fundo atual do mapa                    |
 | POST   | `/api/map/background`                       | admin          | Faz upload de uma nova imagem de fundo do mapa           |
 | GET    | `/api/quadrants/:row/:col/summary`          | -              | Lê o resumo (markdown) de um quadrante                  |
@@ -102,6 +104,18 @@ A autenticação ainda é provisória (sem tabela de usuários): qualquer usuár
 | POST   | `/api/quadrants/:row/:col/comments`         | usuário logado | Cria um rumor (`author` opcional; vazio = anônimo)        |
 | PUT    | `/api/quadrants/:row/:col/comments/:id`     | dono ou admin  | Edita um rumor                                           |
 | DELETE | `/api/quadrants/:row/:col/comments/:id`     | dono ou admin  | Remove um rumor                                          |
+| GET    | `/api/characters`                           | usuário logado | Lista os personagens do usuário logado                   |
+| POST   | `/api/characters`                           | usuário logado | Cria um personagem                                        |
+| PUT    | `/api/characters/:id`                       | dono           | Edita um personagem                                       |
+| DELETE | `/api/characters/:id`                       | dono           | Remove um personagem                                      |
+| GET    | `/api/users`                                | admin          | Lista todos os usuários                                   |
+| POST   | `/api/users`                                | admin          | Cria um usuário                                            |
+| PUT    | `/api/users/:id`                            | admin          | Edita um usuário (senha opcional)                          |
+| DELETE | `/api/users/:id`                            | admin          | Remove um usuário (exceto a própria conta)                 |
+| GET    | `/api/pins`                                 | -              | Lista os marcadores livres do mapa                         |
+| POST   | `/api/pins`                                 | usuário logado | Cria um marcador (`x`, `y`, `icon`, `label` opcional)      |
+| PUT    | `/api/pins/:id`                             | dono ou admin  | Edita um marcador (posição/descrição)                      |
+| DELETE | `/api/pins/:id`                             | dono ou admin  | Remove um marcador                                         |
 | GET    | `/api/wiki/tree`                            | -              | Árvore de pastas/páginas da wiki                          |
 | GET    | `/api/wiki/pages/*`                         | -              | Lê o conteúdo (markdown) de uma página da wiki            |
 | POST   | `/api/wiki/pages`                           | admin          | Cria uma página nova (`parentPath`, `name`, `content`)    |
@@ -109,35 +123,49 @@ A autenticação ainda é provisória (sem tabela de usuários): qualquer usuár
 | DELETE | `/api/wiki/pages/*`                         | admin          | Remove uma página                                          |
 | POST   | `/api/wiki/folders`                         | admin          | Cria uma pasta nova (`parentPath`, `name`)                 |
 | DELETE | `/api/wiki/folders/*`                       | admin          | Remove uma pasta e todo o conteúdo dentro dela              |
+| GET    | `/api/campaigns`                            | -              | Lista as campanhas                                        |
+| POST   | `/api/campaigns`                            | usuário logado | Cria uma campanha (quem cria vira o mestre)                |
+| GET    | `/api/campaigns/:id`                        | -              | Detalhe de uma campanha (inclui o prólogo)                 |
+| PUT    | `/api/campaigns/:id`                        | usuário logado | Atualiza o prólogo da campanha                             |
+| DELETE | `/api/campaigns/:id`                        | mestre ou admin| Remove a campanha e todas as atas dela                     |
+| GET    | `/api/campaigns/:id/atas`                   | -              | Lista as atas (registros de sessão) da campanha            |
+| POST   | `/api/campaigns/:id/atas`                   | usuário logado | Cria uma ata (`title`, `content`)                          |
+| PUT    | `/api/campaigns/:id/atas/:ataId`            | usuário logado | Edita uma ata                                              |
+| DELETE | `/api/campaigns/:id/atas/:ataId`            | usuário logado | Remove uma ata                                             |
 
-## Funcionalidades planejadas
+## Funcionalidades
 
 ### Mapa Mundial
-- Grid de 32×20 sobreposto a uma imagem do mundo, com proporção 16:10, alinhado à esquerda da tela
-- Imagem de fundo do mapa pode ser trocada por um admin, direto pela interface
-- Cada quadrante do grid abre um painel à direita com:
+- ✅ Grid de 32×20 sobreposto a uma imagem do mundo, com proporção 16:10, alinhado à esquerda da tela
+- ✅ Imagem de fundo do mapa pode ser trocada por um admin, direto pela interface
+- ✅ Cada quadrante do grid abre um painel à direita com:
   - Resumo do quadrante em **Markdown**, editável por qualquer usuário logado
   - Lista de **rumores** (comentários) daquele quadrante, com CRUD completo — cada rumor pode ser atribuído a um personagem (player ou NPC) ou postado como mensagem anônima; só quem criou o rumor (ou um admin) pode editar/remover
-- Marcadores de **death points** conhecidos e de **loot** (planejado)
-- Quadro de missões globais, visível para todas as campanhas (planejado)
-- Múltiplas campanhas podem se desenrolar simultaneamente sobre o mesmo mapa
+- ✅ Marcadores livres, arrastáveis, soltos direto no mapa: 💀 death point, 💰 loot, 🏰 cidade, ⚔️ combate, ❗ missão, 📍 genérico — qualquer usuário logado cria; só quem criou (ou admin) edita/remove
+- 🔲 Zoom no grid do mapa
+- 🔲 Quadro de missões global como **lista dedicada** (hoje só existe o marcador ❗ no mapa, sem uma visão em lista separada)
+- 🔲 Múltiplas campanhas simultâneas sobre o mesmo mapa (o mapa hoje é único e compartilhado, sem separação por campanha)
 
 ### Wiki
-- Estrutura em árvore de pastas e páginas, cada página é um arquivo `.md` guardado em `apps/backend/wiki/`
-- Navegação lateral com a árvore completa; conteúdo renderizado a partir do markdown
-- Só admin cria/edita/remove páginas e pastas pela interface (`/wiki`) ou via API; leitura é aberta a todos
+- ✅ Estrutura em árvore de pastas e páginas, cada página é um arquivo `.md` guardado em `apps/backend/wiki/`
+- ✅ Navegação lateral com a árvore completa; conteúdo renderizado a partir do markdown
+- ✅ Só admin cria/edita/remove páginas e pastas pela interface (`/wiki`) ou via API; leitura é aberta a todos
 - Categorias sugeridas: regras do jogo, personagens/NPCs conhecidos, quests em aberto
 
 ### Plataforma / Usuários
-- Login por usuário
-- Papéis (roles): **Admin**, **Player** e/ou **Mestrante** — qualquer jogador pode se tornar mestre de sua própria campanha
-- Fichas de personagem vinculadas a cada usuário
+- ✅ Login por usuário com autenticação real (JWT + senha hasheada)
+- ✅ Gestão de usuários pelo admin (criar/editar/remover) em **Meu Perfil**
+- ✅ Papel (role) **Admin** vs **Player** via flag `is_admin`
+- ✅ Fichas de personagem (nome, raça, classe, nível) vinculadas a cada usuário, com CRUD completo
+- 🔲 Papel de **Mestrante** como algo distinto de Player (hoje qualquer player pode narrar informalmente, mas não há um papel/permissão dedicado nem vínculo de personagem/rumor a uma campanha específica)
 
 ### Campanhas em curso
-- Listagem das campanhas ativas
-- Cada campanha possui:
-  - Um prólogo
-  - Uma ata (registro) do que aconteceu nas sessões
+- ✅ Listagem das campanhas (`/campanhas`) — qualquer usuário logado pode criar uma campanha (e vira o "mestre" dela)
+- ✅ Cada campanha (`/campanhas/:id`) tem:
+  - Um **prólogo** em markdown, editável por qualquer usuário logado (igual ao resumo de quadrante)
+  - Uma lista de **atas** — uma página de markdown por sessão, com título, criável/editável/removível por qualquer usuário logado
+- ✅ Só o mestre da campanha (ou um admin) pode remover a campanha inteira
+- 🔲 Papel de **Mestrante** dedicado e vínculo formal de campanha a personagens/rumores/mapa (hoje "mestre" é só o criador da campanha, sem restrição extra de permissão sobre o conteúdo)
 
 ## Regras de design do mundo
 
@@ -159,9 +187,12 @@ Itens em validação/protótipo no momento (veja [`docs/road-map.md`](docs/road-
 - [ ] Zoom no grid do mapa
 - [ ] Testar formas de tornar a adição de rumores mais imersiva
 - [ ] Paginação/scroll de rumores quando o quadrante tiver muitos comentários
-- [ ] Death points e marcadores de loot no grid
-- [ ] Quadro de missões globais
+- [x] Death points e marcadores de loot no grid — via sistema geral de pins arrastáveis (também cobre 🏰 cidade, ⚔️ combate, ❗ missão, 📍 genérico)
+- [ ] Quadro de missões globais como lista dedicada (hoje só o marcador ❗ no mapa)
 - [x] Wiki (`/wiki`) com páginas em markdown organizadas em pastas, CRUD via API (admin)
+- [x] Navbar redesenhada (ícones por link, estado ativo em pílula, badge de admin)
+- [x] Campanhas em curso (`/campanhas`) — lista + prólogo e atas em markdown por campanha
+- [ ] Papel de Mestrante distinto de Player, vínculo de campanha a personagens/rumores/mapa
 
 ## Contribuindo
 

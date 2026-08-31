@@ -4,6 +4,7 @@ import "./NavBar.css";
 const NAV_LINKS = [
   { to: "/mapa", label: "Mapa", icon: "🗺️" },
   { to: "/wiki", label: "Wiki", icon: "📖" },
+  { to: "/campanhas", label: "Campanhas", icon: "📜" },
   { to: "/perfil", label: "Meu Perfil", icon: "👤" },
 ];
 

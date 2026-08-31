@@ -395,3 +395,122 @@ export async function deleteMapPin(id, token) {
     throw new Error(data.message || "Não foi possível remover o pin.");
   }
 }
+
+export async function getCampaigns() {
+  const response = await fetch(`${API_URL}/api/campaigns`);
+
+  if (!response.ok) {
+    throw new Error("Não foi possível carregar as campanhas.");
+  }
+
+  return response.json();
+}
+
+export async function createCampaign(name, token) {
+  const response = await fetch(`${API_URL}/api/campaigns`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ name }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível criar a campanha.");
+  }
+
+  return data;
+}
+
+export async function getCampaign(id) {
+  const response = await fetch(`${API_URL}/api/campaigns/${id}`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível carregar a campanha.");
+  }
+
+  return data;
+}
+
+export async function updateCampaignPrologo(id, prologo, token) {
+  const response = await fetch(`${API_URL}/api/campaigns/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ prologo }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível salvar o prólogo.");
+  }
+
+  return data;
+}
+
+export async function deleteCampaign(id, token) {
+  const response = await fetch(`${API_URL}/api/campaigns/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || "Não foi possível remover a campanha.");
+  }
+}
+
+export async function getCampaignAtas(campaignId) {
+  const response = await fetch(`${API_URL}/api/campaigns/${campaignId}/atas`);
+
+  if (!response.ok) {
+    throw new Error("Não foi possível carregar as atas.");
+  }
+
+  return response.json();
+}
+
+export async function createCampaignAta(campaignId, { title, content }, token) {
+  const response = await fetch(`${API_URL}/api/campaigns/${campaignId}/atas`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ title, content }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível criar a ata.");
+  }
+
+  return data;
+}
+
+export async function updateCampaignAta(campaignId, ataId, { title, content }, token) {
+  const response = await fetch(`${API_URL}/api/campaigns/${campaignId}/atas/${ataId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ title, content }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Não foi possível salvar a ata.");
+  }
+
+  return data;
+}
+
+export async function deleteCampaignAta(campaignId, ataId, token) {
+  const response = await fetch(`${API_URL}/api/campaigns/${campaignId}/atas/${ataId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || "Não foi possível remover a ata.");
+  }
+}

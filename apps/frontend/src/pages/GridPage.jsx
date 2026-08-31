@@ -13,6 +13,8 @@ import "./GridPage.css";
 
 const ROWS = 20;
 const COLS = 32;
+const ZOOM_SCALE = 4;
+const IDENTITY_TRANSFORM = { scale: 1, x: 0, y: 0 };
 
 function getStoredUser() {
   try {
@@ -27,9 +29,11 @@ function clampPercent(value) {
 }
 
 function GridPage() {
+  const viewportRef = useRef(null);
   const boardRef = useRef(null);
   const [selectedCell, setSelectedCell] = useState(null);
   const [backgroundUrl, setBackgroundUrl] = useState(null);
+  const [boardTransform, setBoardTransform] = useState(IDENTITY_TRANSFORM);
 
   const [pins, setPins] = useState([]);
   const [selectedPinId, setSelectedPinId] = useState(null);
@@ -53,6 +57,34 @@ function GridPage() {
       .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    function updateTransform() {
+      if (selectedCell === null) {
+        setBoardTransform(IDENTITY_TRANSFORM);
+        return;
+      }
+
+      const viewport = viewportRef.current;
+      if (!viewport) return;
+
+      const rect = viewport.getBoundingClientRect();
+      const row = Math.floor(selectedCell / COLS);
+      const col = selectedCell % COLS;
+      const cellCenterX = ((col + 0.5) / COLS) * rect.width;
+      const cellCenterY = ((row + 0.5) / ROWS) * rect.height;
+
+      setBoardTransform({
+        scale: ZOOM_SCALE,
+        x: rect.width / 2 - cellCenterX * ZOOM_SCALE,
+        y: rect.height / 2 - cellCenterY * ZOOM_SCALE,
+      });
+    }
+
+    updateTransform();
+    window.addEventListener("resize", updateTransform);
+    return () => window.removeEventListener("resize", updateTransform);
+  }, [selectedCell]);
 
   function getRelativePosition(event) {
     const rect = boardRef.current.getBoundingClientRect();
@@ -125,7 +157,11 @@ function GridPage() {
     <div className="grid-page">
       <header className="grid-header">
         <h1>Mapa Mundial</h1>
-        <p>Selecione um quadrante para ver os rumores (em construção).</p>
+        <p>
+          {selectedCell === null
+            ? "Selecione um quadrante para dar zoom e ver os rumores."
+            : "Clique no quadrante selecionado de novo (ou feche o painel) para voltar ao mapa inteiro."}
+        </p>
       </header>
 
       {user && <PinPalette />}
@@ -133,77 +169,83 @@ function GridPage() {
 
       <div className="grid-layout">
         <div
-          ref={boardRef}
-          className="grid-board"
-          style={{
-            gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-            gridTemplateRows: `repeat(${ROWS}, 1fr)`,
-            backgroundImage: backgroundUrl ? `url(${API_URL}${backgroundUrl})` : undefined,
-          }}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
+          ref={viewportRef}
+          className={`grid-board-viewport${selectedCell !== null ? " grid-board-viewport--zoomed" : ""}`}
         >
-          {cells.map((index) => (
-            <button
-              key={index}
-              type="button"
-              className={`grid-cell${selectedCell === index ? " grid-cell--selected" : ""}`}
-              onClick={() => setSelectedCell((prev) => (prev === index ? null : index))}
-              aria-label={`Quadrante ${Math.floor(index / COLS)}, ${index % COLS}`}
-            />
-          ))}
-
-          <div className="pin-layer">
-            {pins.map((pin) => (
-              <div
-                key={pin.id}
-                className="map-pin-wrapper"
-                style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
-              >
-                <button
-                  type="button"
-                  className="map-pin"
-                  draggable={pin.canModify}
-                  onDragStart={(event) => handlePinDragStart(event, pin)}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    togglePin(pin);
-                  }}
-                  title={pin.label || undefined}
-                >
-                  {pin.icon}
-                </button>
-
-                {selectedPinId === pin.id && (
-                  <div className="map-pin-popover" onClick={(event) => event.stopPropagation()}>
-                    {pin.canModify ? (
-                      <>
-                        <input
-                          type="text"
-                          value={pinLabelDraft}
-                          placeholder="Descrição do pin"
-                          onChange={(event) => setPinLabelDraft(event.target.value)}
-                        />
-                        <div className="map-pin-popover-actions">
-                          <button type="button" onClick={() => handleSavePinLabel(pin)}>
-                            Salvar
-                          </button>
-                          <button
-                            type="button"
-                            className="map-pin-popover-danger"
-                            onClick={() => handleDeletePin(pin)}
-                          >
-                            Remover
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <p>{pin.label || "Sem descrição"}</p>
-                    )}
-                  </div>
-                )}
-              </div>
+          <div
+            ref={boardRef}
+            className="grid-board"
+            style={{
+              gridTemplateColumns: `repeat(${COLS}, 1fr)`,
+              gridTemplateRows: `repeat(${ROWS}, 1fr)`,
+              backgroundImage: backgroundUrl ? `url(${API_URL}${backgroundUrl})` : undefined,
+              transform: `translate(${boardTransform.x}px, ${boardTransform.y}px) scale(${boardTransform.scale})`,
+            }}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
+            {cells.map((index) => (
+              <button
+                key={index}
+                type="button"
+                className={`grid-cell${selectedCell === index ? " grid-cell--selected" : ""}`}
+                onClick={() => setSelectedCell((prev) => (prev === index ? null : index))}
+                aria-label={`Quadrante ${Math.floor(index / COLS)}, ${index % COLS}`}
+              />
             ))}
+
+            <div className="pin-layer">
+              {pins.map((pin) => (
+                <div
+                  key={pin.id}
+                  className="map-pin-wrapper"
+                  style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+                >
+                  <button
+                    type="button"
+                    className="map-pin"
+                    draggable={pin.canModify}
+                    onDragStart={(event) => handlePinDragStart(event, pin)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      togglePin(pin);
+                    }}
+                    title={pin.label || undefined}
+                  >
+                    {pin.icon}
+                  </button>
+
+                  {selectedPinId === pin.id && (
+                    <div className="map-pin-popover" onClick={(event) => event.stopPropagation()}>
+                      {pin.canModify ? (
+                        <>
+                          <input
+                            type="text"
+                            value={pinLabelDraft}
+                            placeholder="Descrição do pin"
+                            onChange={(event) => setPinLabelDraft(event.target.value)}
+                          />
+                          <div className="map-pin-popover-actions">
+                            <button type="button" onClick={() => handleSavePinLabel(pin)}>
+                              Salvar
+                            </button>
+                            <button
+                              type="button"
+                              className="map-pin-popover-danger"
+                              onClick={() => handleDeletePin(pin)}
+                            >
+                              Remover
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <p>{pin.label || "Sem descrição"}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

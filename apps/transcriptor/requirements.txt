@@ -1,0 +1,10 @@
+# CUDA build for this machine's GPU (NVIDIA RTX 4060 Ti, driver supports up to CUDA 13.2).
+# Without a matching NVIDIA GPU/driver, remove this line and the version pins below
+# on torch/torchaudio/torchcodec so pip falls back to the plain CPU builds.
+--extra-index-url https://download.pytorch.org/whl/cu130
+
+openai-whisper
+torch==2.13.0+cu130
+torchaudio==2.11.0+cu130
+torchcodec==0.16.0+cu130
+pyannote.audio

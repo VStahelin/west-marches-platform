@@ -41,19 +41,34 @@
   color: var(--danger);
 }
 
-.grid-board {
+.grid-board-viewport {
   position: relative;
   flex: 0 0 auto;
-  display: grid;
   width: min(1200px, 100%);
   aspect-ratio: 16 / 10;
+  overflow: hidden;
   border: 3px solid var(--border);
   outline: 1px solid var(--border);
   outline-offset: -8px;
   border-radius: 4px;
   background-color: var(--bg-alt);
+}
+
+/* Encolhe o mapa quando um quadrante está selecionado, garantindo espaço
+   pro QuadrantPanel ficar ao lado em vez de quebrar linha em telas comuns. */
+.grid-board-viewport--zoomed {
+  width: min(860px, 100%);
+}
+
+.grid-board {
+  position: absolute;
+  inset: 0;
+  display: grid;
   background-size: cover;
   background-position: center;
+  transform-origin: 0 0;
+  transition: transform 0.35s ease;
+  will-change: transform;
 }
 
 .pin-layer {

@@ -1,0 +1,222 @@
+.campaign-detail-page {
+  flex: 1;
+  padding: 24px;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.campaign-back-link {
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.campaign-back-link:hover {
+  color: var(--text-h);
+}
+
+.campaign-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.campaign-detail-header h1 {
+  font-size: 24px;
+  margin-bottom: 2px;
+}
+
+.campaign-detail-header p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.campaign-section {
+  padding: 16px;
+  border: 2px solid var(--border);
+  outline: 1px solid var(--border);
+  outline-offset: -5px;
+  border-radius: 10px;
+  background: var(--bg-alt);
+  --bg: var(--bg-alt-2);
+  --text: var(--ink);
+  --text-h: var(--ink-strong);
+  --danger: var(--danger-ink);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.campaign-section h2 {
+  font-size: 16px;
+  color: var(--text-h);
+}
+
+.campaign-markdown {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.campaign-markdown :first-child {
+  margin-top: 0;
+}
+
+.campaign-markdown :last-child {
+  margin-bottom: 0;
+}
+
+.campaign-section input,
+.campaign-section textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  resize: vertical;
+}
+
+.campaign-section input:focus,
+.campaign-section textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.campaign-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.campaign-section button,
+.campaign-detail-header button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  align-self: flex-start;
+}
+
+.campaign-section button:hover:not(:disabled),
+.campaign-detail-header button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.campaign-section button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.campaign-secondary {
+  background: transparent !important;
+  color: var(--text-h) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.campaign-danger {
+  background: transparent !important;
+  color: var(--danger) !important;
+  border: 1px solid var(--danger) !important;
+}
+
+.campaign-form--new {
+  padding: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.campaign-form--new h3 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.campaigns-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.campaigns-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text);
+  opacity: 0.85;
+}
+
+/* Lista de atas */
+
+.ata-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ata-item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.ata-item-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: var(--text-h);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ata-item-caret {
+  flex-shrink: 0;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.ata-item-header strong {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.ata-item-meta {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.ata-item-body {
+  padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ata-item-actions {
+  display: flex;
+  gap: 8px;
+}

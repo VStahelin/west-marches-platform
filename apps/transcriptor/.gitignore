@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+.hf_token
+
+sources/audios/*
+!sources/audios/.gitkeep
+
+transcriptions/*
+!transcriptions/.gitkeep
